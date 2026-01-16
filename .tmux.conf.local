@@ -1,0 +1,129 @@
+# Oh My Tmux - Custom Configuration
+# https://github.com/gpakosz/.tmux
+
+# ==============================================================================
+# 1. Vim 스타일 pane 이동 (기본 제공 - 추가 설정 불필요)
+#    <prefix> h/j/k/l - pane 이동
+#    <prefix> H/J/K/L - pane 크기 조절
+# ==============================================================================
+
+# ==============================================================================
+# 2. Powerline 스타일 상태바 (Nerd Font 필요)
+# ==============================================================================
+#tmux_conf_theme_left_separator_main='\uE0B0'
+#tmux_conf_theme_left_separator_sub='\uE0B1'
+#tmux_conf_theme_right_separator_main='\uE0B2'
+#tmux_conf_theme_right_separator_sub='\uE0B3'
+tmux_conf_theme_left_separator_main='\uE0B0'
+tmux_conf_theme_left_separator_sub=''
+tmux_conf_theme_right_separator_main=''
+tmux_conf_theme_right_separator_sub='|'
+
+# ==============================================================================
+# 3. SSH 서버 정보 표시
+# ==============================================================================
+# 상태바 왼쪽: 세션명 + 업타임
+tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
+
+# 클로드 상태바 일단 중지(도움X)
+#tmux_conf_theme_status_left=" ❐ #S | #(cat /tmp/claude_status 2>/dev/null)"
+#tmux_conf_theme_status_left=" ❐ #S | #"
+
+# 상태바 오른쪽: 시간 | 날짜 | 사용자명 | 호스트명 (배터리 제거)
+# #{username} - SSH 접속시 원격 사용자명 표시
+# #{hostname} - SSH 접속시 원격 호스트명 표시
+tmux_conf_theme_status_right=" #{prefix}#{pairing}#{synchronized} %R , %d %b | #{username}#{root} | #{pretty_pane_current_path}"
+
+# ==============================================================================
+# 5. 마우스 지원
+# ==============================================================================
+set -g mouse on
+
+# ==============================================================================
+# 6. Copy mode vi 스타일 키바인딩
+# ==============================================================================
+setw -g mode-keys vi
+
+# ==============================================================================
+# 추가 유용한 설정
+# ==============================================================================
+
+# 새 pane이 현재 경로 유지
+tmux_conf_new_pane_retain_current_path=true
+
+# 히스토리 크기 증가
+set -g history-limit 50000
+
+# 24비트 컬러 지원
+tmux_conf_24b_colour=true
+
+# ==============================================================================
+# 선택적 설정 (주석 해제하여 사용)
+# ==============================================================================
+
+# C-a를 유일한 prefix로 사용 (C-b 비활성화)
+# set -gu prefix2
+# unbind C-a
+# unbind C-b
+# set -g prefix C-a
+# bind C-a send-prefix
+
+# 상태바 위치를 상단으로
+# set -g status-position top
+
+# ==============================================================================
+# 키바인딩
+# ==============================================================================
+
+# 표준 tmux 창 이동 (다음/이전 창)
+bind n next-window
+bind p previous-window
+# prefix + 방향키로 pane 이동
+bind Left select-pane -L
+bind Right select-pane -R
+
+
+# 한글 키바인딩 (한글 입력 상태에서도 동작)
+bind ㅜ next-window      # n
+bind ㅔ previous-window  # p
+bind ㄱ source-file ~/.tmux.conf \; display-message "Config reloaded!"  # r
+
+# 설정 리로드
+bind r source-file ~/.tmux.conf \; display-message "Config reloaded!"
+
+# ==============================================================================
+# Pane 구분선 설정
+# ==============================================================================
+# single / heavy /double / simple 
+
+# 구분선 분리(녹색/회색)
+set -g pane-border-lines single             
+tmux_conf_theme_pane_border_style=thin          # thin 또는 fat
+tmux_conf_theme_pane_border='#444444'           # 비활성 pane 테두리
+tmux_conf_theme_pane_active_border='#00ff00'    # 활성 pane 테두리 (녹색)
+
+# 구분선 통일(녹색)
+#tmux_conf_theme_pane_border='#00ff00'
+#tmux_conf_theme_pane_active_border='#00ff00'
+
+# ==============================================================================
+# TPM 플러그인 설정
+# ==============================================================================
+
+# 플러그인 목록
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+# Resurrect 설정
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'  # neovim 사용시
+
+# Continuum 설정
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+
+# TPM 실행 (맨 마지막에 위치)
+run '~/.tmux/plugins/tpm/tpm'
