@@ -6,14 +6,14 @@ Oh My Tmux + Custom Settings - 한 줄 설치
 
 ```bash
 # curl | bash (한 줄 설치)
-curl -fsSL "https://raw.githubusercontent.com/spjang-iotrust/opentmux/main/install.sh" | bash
+curl -fsSL "https://raw.githubusercontent.com/hackjap/opentmux/main/install.sh" | bash
 ```
 
 ## Alternative Install
 
 ```bash
 # git clone 후 설치 (심볼릭 링크 방식)
-git clone https://github.com/spjang-iotrust/opentmux.git ~/opentmux
+git clone https://github.com/hackjap/opentmux.git ~/opentmux
 cd ~/opentmux && ./install.sh
 ```
 
